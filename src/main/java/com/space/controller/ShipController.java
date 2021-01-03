@@ -7,6 +7,7 @@ import com.space.model.ShipType;
 import com.space.service.ShipService;
 import com.space.service.ShipServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class ShipController {
                               @RequestParam(required = false) ShipOrder order,
                               @RequestParam(required = false) Integer pageNumber,
                               @RequestParam(required = false) Integer pageSize){
+
         List<Ship> list = shipServiceImpl.getFilteredShips(order, pageSize, pageNumber,
                                                             name, planet,
                                                             shipType,
