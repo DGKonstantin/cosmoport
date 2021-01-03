@@ -7,6 +7,8 @@ import com.space.model.Ship;
 import com.space.model.ShipType;
 import com.space.repository.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.*;
 
 import java.sql.SQLException;
@@ -26,6 +28,16 @@ public class ShipServiceImpl implements ShipService{
     @Override
     public List<Ship> getAllShips() {
         return repository.findAll();
+    }
+
+    @Override
+    public Page<Ship> getAllShips(Specification<Ship> specification, Pageable pageable) {
+        return repository.findAll(specification, pageable);
+    }
+
+    @Override
+    public List<Ship> getAllShips(Specification<Ship> specification) {
+        return repository.findAll(specification);
     }
 
     private List<Ship> getSortedShips(List<Ship> list, ShipOrder order, Integer pageSize, Integer pageNumber){
@@ -436,5 +448,85 @@ public class ShipServiceImpl implements ShipService{
         if (newship.getProdDate() != null) oldship.setProdDate(newship.getProdDate());
 
         return oldship;
+    }
+
+    public Specification<Ship> filterByName(String name) {
+        return (root, query, cb) -> name == null ? null : cb.like(root.get("name"), "%" + name + "%");
+    }
+
+    public Specification<Ship> filterByPlanet(String planet) {
+        return (root, query, cb) -> planet == null ? null : cb.like(root.get("planet"), "%" + planet + "%");
+    }
+
+    public Specification<Ship> filterByShipType(ShipType shipType) {
+        return (root, query, cb) -> shipType == null ? null : cb.equal(root.get("shipType"), shipType);
+    }
+
+    public Specification<Ship> filterByDate(Long after, Long before) {
+        return (root, query, cb) -> {
+            if (after == null && before == null)
+                return null;
+            if (after == null) {
+                Date before1 = new Date(before);
+                return cb.lessThanOrEqualTo(root.get("prodDate"), before1);
+            }
+            if (before == null) {
+                Date after1 = new Date(after);
+                return cb.greaterThanOrEqualTo(root.get("prodDate"), after1);
+            }
+            Date before1 = new Date(before);
+            Date after1 = new Date(after);
+            return cb.between(root.get("prodDate"), after1, before1);
+        };
+    }
+
+    public Specification<Ship> filterByUsage(Boolean isUsed) {
+        return (root, query, cb) -> {
+            if (isUsed == null)
+                return null;
+            if (isUsed)
+                return cb.isTrue(root.get("isUsed"));
+            else return cb.isFalse(root.get("isUsed"));
+        };
+    }
+
+    public Specification<Ship> filterBySpeed(Double min, Double max) {
+        return (root, query, cb) -> {
+            if (min == null && max == null)
+                return null;
+            if (min == null)
+                return cb.lessThanOrEqualTo(root.get("speed"), max);
+            if (max == null)
+                return cb.greaterThanOrEqualTo(root.get("speed"), min);
+
+            return cb.between(root.get("speed"), min, max);
+        };
+    }
+
+    public Specification<Ship> filterByCrewSize(Integer min, Integer max) {
+        return (root, query, cb) -> {
+            if (min == null && max == null)
+                return null;
+            if (min == null)
+                return cb.lessThanOrEqualTo(root.get("crewSize"), max);
+            if (max == null)
+                return cb.greaterThanOrEqualTo(root.get("crewSize"), min);
+
+            return cb.between(root.get("crewSize"), min, max);
+        };
+    }
+
+
+    public Specification<Ship> filterByRating(Double min, Double max) {
+        return (root, query, cb) -> {
+            if (min == null && max == null)
+                return null;
+            if (min == null)
+                return cb.lessThanOrEqualTo(root.get("rating"), max);
+            if (max == null)
+                return cb.greaterThanOrEqualTo(root.get("rating"), min);
+
+            return cb.between(root.get("rating"), min, max);
+        };
     }
 }
