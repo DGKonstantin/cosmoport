@@ -126,12 +126,15 @@ public class ShipServiceImpl implements ShipService{
             }
         }
         if (after != null){
-            Calendar prodDate = Calendar.getInstance();
-            Calendar afterDate = Calendar.getInstance();
+            Calendar calendarThis = Calendar.getInstance();
+            Calendar calendarThat = Calendar.getInstance();
             for (int i = 0; i < list.size(); i++) {
-                prodDate.setTimeInMillis(list.get(i).getProdDate().getTime());
-                afterDate.setTimeInMillis(after);
-                if(!(prodDate.get(Calendar.YEAR) >= afterDate.get(Calendar.YEAR))) {
+                calendarThis.setTimeInMillis(list.get(i).getProdDate().getTime());
+                int prodYearThis = calendarThis.get(Calendar.YEAR);
+                calendarThat.setTimeInMillis(after);
+                int prodYearThat = calendarThat.get(Calendar.YEAR);
+
+                if(!(prodYearThis >= prodYearThat)) {
                     list.remove(i);
                     --i;
                     if (list.size() == 0) break;
@@ -139,12 +142,14 @@ public class ShipServiceImpl implements ShipService{
             }
         }
         if (before != null){
-            Calendar prodDate = Calendar.getInstance();
-            Calendar beforeDate = Calendar.getInstance();
+            Calendar calendarThis = Calendar.getInstance();
+            Calendar calendarThat = Calendar.getInstance();
             for (int i = 0; i < list.size(); i++) {
-                prodDate.setTimeInMillis(list.get(i).getProdDate().getTime());
-                beforeDate.setTimeInMillis(before);
-                if(!(prodDate.get(Calendar.YEAR) <= beforeDate.get(Calendar.YEAR))) {
+                calendarThis.setTimeInMillis(list.get(i).getProdDate().getTime());
+                int prodYearThis = calendarThis.get(Calendar.YEAR);
+                calendarThat.setTimeInMillis(before);
+                int prodYearThat = calendarThat.get(Calendar.YEAR);
+                if(!(prodYearThis <= prodYearThat)) {
                     list.remove(i);
                     --i;
                 }
