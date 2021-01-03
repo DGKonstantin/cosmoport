@@ -130,11 +130,12 @@ public class ShipServiceImpl implements ShipService{
             Calendar calendarThat = Calendar.getInstance();
             for (int i = 0; i < list.size(); i++) {
                 calendarThis.setTimeInMillis(list.get(i).getProdDate().getTime());
-                int prodYearThis = calendarThis.get(Calendar.YEAR);
+                //int prodYearThis = calendarThis.get(Calendar.YEAR);
+                int prodYearThis = Integer.parseInt(list.get(i).getProdDate().toString().substring(0, 4));
                 calendarThat.setTimeInMillis(after);
                 int prodYearThat = calendarThat.get(Calendar.YEAR);
 
-                if(!(calendarThis.getTime().getTime() <= calendarThat.getTime().getTime())) {
+                if(!(prodYearThis >= prodYearThat)) {
                     list.remove(i);
                     --i;
                     if (list.size() == 0) break;
@@ -147,9 +148,10 @@ public class ShipServiceImpl implements ShipService{
             for (int i = 0; i < list.size(); i++) {
                 calendarThis.setTimeInMillis(list.get(i).getProdDate().getTime());
                 //int prodYearThis = calendarThis.get(Calendar.YEAR);
+                int prodYearThis = Integer.parseInt(list.get(i).getProdDate().toString().substring(0, 4));
                 calendarThat.setTimeInMillis(before);
-                //int prodYearThat = calendarThat.get(Calendar.YEAR);
-                if(!(calendarThis.getTime().getTime() <= calendarThat.getTime().getTime())) {
+                int prodYearThat = calendarThat.get(Calendar.YEAR);
+                if(!(prodYearThis <= prodYearThat)) {
                     list.remove(i);
                     --i;
                 }
