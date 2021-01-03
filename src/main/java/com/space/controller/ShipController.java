@@ -83,13 +83,14 @@ public class ShipController {
                               @RequestParam(required = false) Integer maxCrewSize,
                               @RequestParam(required = false) Double minRating,
                               @RequestParam(required = false) Double maxRating){
-        return shipServiceImpl.getCount(name, planet,
-                                        shipType,
-                                        after, before,
-                                        isUsed,
-                                        minSpeed, maxSpeed,
-                                        minCrewSize, maxCrewSize,
-                                        minRating, maxRating);
+        return shipServiceImpl.getCount(Specification.where(shipServiceImpl.filterByName(name)
+                .and(shipServiceImpl.filterByPlanet(planet)))
+                .and(shipServiceImpl.filterByShipType(shipType))
+                .and(shipServiceImpl.filterByDate(after, before))
+                .and(shipServiceImpl.filterByUsage(isUsed))
+                .and(shipServiceImpl.filterBySpeed(minSpeed, maxSpeed))
+                .and(shipServiceImpl.filterByCrewSize(minCrewSize, maxCrewSize))
+                .and(shipServiceImpl.filterByRating(minRating, maxRating)));
     }
 
     @PostMapping("/rest/ships")

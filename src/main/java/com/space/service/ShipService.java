@@ -25,24 +25,9 @@ public interface ShipService {
     Ship editShip(Ship ship, String sid) throws NotValidException, SQLException, ShipNotFound;
 
 
-    List<Ship> getFilteredShips(ShipOrder order, Integer pageSize, Integer pageNumber,
-                                String name, String planet,
-                                ShipType shipType,
-                                Long after, Long before,
-                                Boolean isUsed,
-                                Double minSpeed, Double maxSpeed,
-                                Integer minCrewSize, Integer maxCrewSize,
-                                Double minRating, Double maxRating);
-
     void deleteShip(String sid) throws NotValidException, SQLException, ShipNotFound;
 
-    Integer getCount(String name, String planet,
-                     ShipType shipType,
-                     Long after, Long before,
-                     Boolean isUsed,
-                     Double minSpeed, Double maxSpeed,
-                     Integer minCrewSize, Integer maxCrewSize,
-                     Double minRating, Double maxRating);
+    Integer getCount(Specification<Ship> specification);
 
     Ship getShipById(String sid) throws NotValidException, SQLException, ShipNotFound;
 
